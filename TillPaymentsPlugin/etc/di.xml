@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="tillpayments/general/password" xsi:type="string">1</item>
+                <item name="payment/tillpayments_creditcard/api_key" xsi:type="string">1</item>
+                <item name="payment/tillpayments_creditcard/shared_secret" xsi:type="string">1</item>
+                <item name="payment/tillpayments_creditcard/integration_key" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Payment Method Facade configuration -->
+    <virtualType name="TillPaymentsPaymentGatewayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">TillPayments\TillPaymentsPlugin\Model\Ui\ConfigProvider::CREDITCARD_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">TillPayments\TillPaymentsPlugin\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">TillPayments\TillPaymentsPlugin\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">TillPaymentsPaymentGatewayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">TillPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Logger, initialized with TillPaymentsPaymentGatewayConfig -->
+    <virtualType name="TillPaymentsPaymentGatewayLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionAuthorization">
+        <arguments>
+            <argument name="logger" xsi:type="object">TillPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionDebit">
+        <arguments>
+            <argument name="logger" xsi:type="object">TillPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionVoid">
+        <arguments>
+            <argument name="logger" xsi:type="object">TillPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionCapture">
+        <arguments>
+            <argument name="logger" xsi:type="object">TillPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionRefund">
+        <arguments>
+            <argument name="logger" xsi:type="object">TillPaymentsPaymentGatewayLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- CONFIG -->
+    <virtualType name="TillPaymentsCardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">\TillPayments\TillPaymentsPlugin\Model\Ui\ConfigProvider::CREDITCARD_CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TillPaymentsConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">tillpayments_tillpaymentsplugin</argument>
+            <argument name="pathPattern" xsi:type="string">%s/%s</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Commands infrastructure -->
+    <virtualType name="TillPaymentsPaymentGatewayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">TillPaymentsPaymentGatewayAuthorizeCommand</item>
+                <item name="sale" xsi:type="string">TillPaymentsPaymentGatewaySaleCommand</item>
+                <item name="capture" xsi:type="string">TillPaymentsPaymentGatewayCaptureStrategyCommand</item>
+                <item name="settlement" xsi:type="string">TillPaymentsPaymentGatewayCaptureCommand</item>
+                <item name="vault_authorize" xsi:type="string">TillPaymentsPaymentGatewayVaultAuthorizeCommand</item>
+                <item name="vault_sale" xsi:type="string">TillPaymentsPaymentGatewayVaultSaleCommand</item>
+                <item name="vault_capture" xsi:type="string">TillPaymentsPaymentGatewayVaultCaptureCommand</item>
+                <item name="refund" xsi:type="string">TillPaymentsPaymentGatewayRefundCommand</item>
+                <item name="void" xsi:type="string">TillPaymentsPaymentGatewayVoidCommand</item>
+                <item name="cancel" xsi:type="string">TillPaymentsPaymentGatewayVoidCommand</item>
+                <item name="deny_payment" xsi:type="string">TillPaymentsPaymentGatewayVoidCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TillPaymentsPaymentGatewayCaptureStrategyCommand" type="TillPayments\TillPaymentsPlugin\Gateway\Command\CaptureStrategyCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">TillPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorize command -->
+    <virtualType name="TillPaymentsPaymentGatewayAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPaymentsPaymentGatewayAuthorizationRequest</argument>
+            <argument name="handler" xsi:type="object">TillPaymentsPaymentGatewayResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionAuthorization</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+    <!-- Authorize command End-->
+
+    <!-- Authorize vault command -->
+    <virtualType name="TillPaymentsPaymentGatewayVaultAuthorizeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPaymentsPaymentGatewayAuthorizationVaultRequest</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionAuthorization</argument>
+            <argument name="handler" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Response\TxnIdHandler</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TillPaymentsPaymentGatewayVaultSaleCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPaymentsPaymentGatewayAuthorizationVaultRequest</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionDebit</argument>
+            <argument name="handler" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Response\DebitHandler</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="TillPaymentsPaymentGatewayVaultCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Request\CaptureRequest</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionCapture</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="handler" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Response\CaptureHandler</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+    <!-- Authorize vault command end -->
+
+    <!-- Sale command -->
+    <virtualType name="TillPaymentsPaymentGatewaySaleCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPaymentsPaymentGatewayAuthorizationRequest</argument>
+            <argument name="handler" xsi:type="object">TillPaymentsPaymentGatewaySaleResponseHandlerComposite</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionDebit</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Authorization Request -->
+    <virtualType name="TillPaymentsPaymentGatewayAuthorizationRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\AuthorizationRequest</item>
+                <item name="cvv" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\SaveCardRequest</item>
+                <item name="payment" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\PaymentDataBuilder</item>
+                <item name="customer" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\CustomerDataBuilder</item>
+                <item name="address" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\AddressDataBuilder</item>
+                <item name="threeDSecure" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\ThreeDSecureDataBuilder</item>
+                <item name="extraData" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\ExtraDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Request\AuthorizationRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Authorization vault Request -->
+    <virtualType name="TillPaymentsPaymentGatewayAuthorizationVaultRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\AuthorizationRequest</item>
+                <item name="cvv" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\SaveCardRequest</item>
+                <item name="vault" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\VaultDataBuilder</item>
+                <item name="payment" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\PaymentDataBuilder</item>
+                <item name="customer" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\CustomerDataBuilder</item>
+                <item name="address" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\AddressDataBuilder</item>
+                <item name="threeDSecure" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\ThreeDSecureDataBuilder</item>
+                <item name="extraData" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Request\ExtraDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!--General Response validator-->
+    <virtualType name="GeneralResponseValidator" type="Magento\Payment\Gateway\Validator\ValidatorComposite">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="general" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Validator\GeneralResponseValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture command -->
+    <virtualType name="TillPaymentsPaymentGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Request\CaptureRequest</argument>
+            <argument name="handler" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Response\CaptureHandler</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionCapture</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Capture Request -->
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Request\CaptureRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Refund command -->
+    <virtualType name="TillPaymentsPaymentGatewayRefundCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Request\RefundDataBuilder</argument>
+            <argument name="handler" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Response\CaptureHandler</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionRefund</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Refund Request -->
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Request\RefundDataBuilder">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Void command -->
+    <virtualType name="TillPaymentsPaymentGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Request\VoidRequest</argument>
+            <argument name="handler" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Response\VoidHandler</argument>
+            <argument name="transferFactory" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">GeneralResponseValidator</argument>
+            <argument name="client" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\Http\Client\TransactionVoid</argument>
+            <argument name="errorMessageMapper" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Void Request -->
+    <type name="TillPayments\TillPaymentsPlugin\Gateway\Request\VoidRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Authorize Response handlers -->
+    <virtualType name="TillPaymentsPaymentGatewayResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Response\TxnIdHandler</item>
+                <item name="payment_details" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Response\CardDetailsHandler</item>
+                <item name="vault_details" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Response\VaultDetailsHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Sale Response handlers -->
+    <virtualType name="TillPaymentsPaymentGatewaySaleResponseHandlerComposite" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="txnid" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Response\DebitHandler</item>
+                <item name="payment_details" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Response\CardDetailsHandler</item>
+                <item name="vault_details" xsi:type="string">TillPayments\TillPaymentsPlugin\Gateway\Response\VaultDetailsHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+
+
+    <!-- Value handlers infrastructure -->
+    <virtualType name="TillPaymentsPaymentGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">TillPaymentsPaymentGatewayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="TillPaymentsPaymentGatewayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="TillPayments\TillPaymentsPlugin\Block\Info">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsCardConfig</argument>
+        </arguments>
+    </type>
+
+    <!-- Configuration for Vault payments -->
+    <virtualType name="TillPaymentsVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">\TillPayments\TillPaymentsPlugin\Model\Ui\ConfigProvider::CC_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="TillPaymentsVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">TillPaymentsVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="TillPaymentsVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">TillPaymentsVaultPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="TillPaymentsCreditCardVaultFacade" type="Magento\Vault\Model\Method\Vault">
+        <arguments>
+            <argument name="config" xsi:type="object">TillPaymentsVaultPaymentConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">TillPaymentsVaultPaymentValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">TillPaymentsPaymentGatewayFacade</argument>
+            <argument name="code" xsi:type="const">\TillPayments\TillPaymentsPlugin\Model\Ui\ConfigProvider::CC_VAULT_CODE</argument>
+            <argument name="commandManagerPool" xsi:type="object">TillPaymentsCcVaultCommandManagerPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command managers section for Vault -->
+    <virtualType name="TillPaymentsCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">TillPaymentsPaymentGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="tillpayments_creditcard" xsi:type="string">TillPaymentsCommandManager</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="TillPaymentsCcVaultCommandManagerPool" type="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="tillpayments_creditcard" xsi:type="string">TillPaymentsCommandManager</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END command managers section for Vault -->
+
+    <!-- TillPayments error code mapper -->
+    <virtualType name="TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualConfigReader" type="Magento\Payment\Gateway\ErrorMapper\VirtualConfigReader">
+        <arguments>
+            <argument name="fileName" xsi:type="string">tillpayments_error_mapping.xml</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualMappingData" type="Magento\Payment\Gateway\ErrorMapper\MappingData">
+        <arguments>
+            <argument name="reader" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualConfigReader</argument>
+            <argument name="cacheId" xsi:type="string">tillpayments_error_mapper</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualErrorMessageMapper" type="Magento\Payment\Gateway\ErrorMapper\ErrorMessageMapper">
+        <arguments>
+            <argument name="messageMapping" xsi:type="object">TillPayments\TillPaymentsPlugin\Gateway\ErrorMapper\VirtualMappingData</argument>
+        </arguments>
+    </virtualType>
+</config>

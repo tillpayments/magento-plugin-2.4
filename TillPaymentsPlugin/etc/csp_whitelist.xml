@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp/etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="prod-tillpayments-script" type="host">https://gateway.tillpayments.com</value>
+                <value id="sandbox-tillpayments-script" type="host">https://test-gateway.tillpayments.com</value>
+                <value id="secure-tillpayments-script" type="host">https://secure.tillpayments.com</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="secure-tillpayments-frame" type="host">https://secure.tillpayments.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="prod-tillpayments-connect" type="host">https://gateway.tillpayments.com</value>
+                <value id="sandbox-tillpayments-connect" type="host">https://test-gateway.tillpayments.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

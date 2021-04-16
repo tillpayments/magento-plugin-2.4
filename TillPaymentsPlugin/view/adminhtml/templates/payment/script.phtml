@@ -1,0 +1,21 @@
+<?php
+$code = $block->escapeHtml($block->getCode());
+?>
+<script>
+  //<![CDATA[
+  require(
+    [
+      'jquery',
+      'TillPayments_TillPaymentsPlugin/js/tillpayments',
+      'Magento_Sales/order/create/form',
+      'domReady!'
+    ], function($, TillPayments) {
+      var config = <?php /* @noEscape */ echo $block->getPaymentConfig(); ?>,
+        payment,
+        form = $('#payment_form_<?php /* @noEscape */ echo $code; ?>');
+
+      config.active = form.length > 0 && !form.is(':hidden');
+      payment = new TillPayments(config);
+    });
+  //]]>
+</script>

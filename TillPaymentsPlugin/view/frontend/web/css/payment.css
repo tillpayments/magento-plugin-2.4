@@ -1,0 +1,17 @@
+form.tillpayments_seamless {
+    margin: 0 0 10px 0;
+}
+form.tillpayments_seamless .input-expire-month {
+    float: left;
+}
+form.tillpayments_seamless .input-expire-year {
+    float: left;
+    margin: 0 0 0 10px;
+}
+form.tillpayments_seamless .input-seamless {
+    height: 32px;
+}
+.expire-month-year-sec{
+    display: flex;
+    align-items: baseline;
+}
