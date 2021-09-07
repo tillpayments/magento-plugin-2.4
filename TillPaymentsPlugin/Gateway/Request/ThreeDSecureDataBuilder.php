@@ -20,7 +20,7 @@ class ThreeDSecureDataBuilder implements BuilderInterface
     /**
      * @var Helper
      */
-    private Helper $helper;
+    private $helper;
 
     /**
      * Constructor

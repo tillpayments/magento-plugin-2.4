@@ -57,52 +57,52 @@ class Data extends AbstractHelper
     /**
      * @var StoreManagerInterface
      */
-    protected StoreManagerInterface $_storeManager;
+    protected $_storeManager;
 
     /**
      * @var State
      */
-    protected State $_state;
+    protected $_state;
 
     /**
      * @var EncryptorInterface
      */
-    protected EncryptorInterface $_encryptor;
+    protected $_encryptor;
 
     /**
      * @var ModuleListInterface
      */
-    protected ModuleListInterface $_moduleList;
+    protected $_moduleList;
 
     /**
      * @var ProductMetadataInterface
      */
-    protected ProductMetadataInterface $productMetadata;
+    protected $productMetadata;
 
     /**
      * @var Session
      */
-    protected Session $customerSession;
+    protected $customerSession;
 
     /**
      * @var Region
      */
-    protected Region $regionModel;
+    protected $regionModel;
 
     /**
      * @var StringUtils
      */
-    protected StringUtils $string;
+    protected $string;
 
     /**
      * @var \Magento\Checkout\Model\Session
      */
-    protected \Magento\Checkout\Model\Session $session;
+    protected $session;
 
     /**
      * @var CountryFactory
      */
-    protected CountryFactory $countryFactory;
+    protected $countryFactory;
 
     /**
      * Data constructor.

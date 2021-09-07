@@ -18,12 +18,12 @@ class CaptureRequest implements BuilderInterface
     /**
      * @var Data
      */
-    protected Data $_helper;
+    protected $_helper;
 
     /**
      * @var ConfigInterface
      */
-    private ConfigInterface $config;
+    private $config;
 
     /**
      * @param ConfigInterface $config

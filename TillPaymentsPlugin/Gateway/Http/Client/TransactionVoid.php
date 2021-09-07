@@ -14,12 +14,12 @@ class TransactionVoid implements ClientInterface
     /**
      * @var Logger
      */
-    private Logger $logger;
+    private $logger;
 
     /**
      * @var Service
      */
-    private Service $service;
+    private $service;
 
     /**
      * TransactionVoid constructor.

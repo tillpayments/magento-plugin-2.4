@@ -25,27 +25,27 @@ class Callback extends Action implements CsrfAwareActionInterface
     /**
      * @var OrderRepositoryInterface
      */
-    protected OrderRepositoryInterface $orderRepository;
+    protected $orderRepository;
 
     /**
      * @var Json
      */
-    protected Json $_json;
+    protected $_json;
 
     /**
      * @var ObjectManagerInterface
      */
-    private ObjectManagerInterface $objectManager;
+    private $objectManager;
 
     /**
      * @var Session
      */
-    private Session $checkoutSession;
+    private $checkoutSession;
 
     /**
      * @var InvoiceService
      */
-    private InvoiceService $invoiceService;
+    private $invoiceService;
 
     /**
      * @var Data

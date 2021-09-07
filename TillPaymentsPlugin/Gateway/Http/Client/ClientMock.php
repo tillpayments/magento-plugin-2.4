@@ -14,7 +14,7 @@ class ClientMock implements ClientInterface
     /**
      * @var array
      */
-    private array $results = [
+    private $results = [
         self::SUCCESS,
         self::FAILURE
     ];

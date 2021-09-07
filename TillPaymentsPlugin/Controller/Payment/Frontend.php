@@ -17,17 +17,17 @@ class Frontend extends Action
     /**
      * @var Session
      */
-    private Session $session;
+    private $session;
 
     /**
      * @var UrlInterface
      */
-    private UrlInterface $urlBuilder;
+    private $urlBuilder;
 
     /**
      * @var JsonFactory
      */
-    private JsonFactory $resultJsonFactory;
+    private $resultJsonFactory;
 
     /**
      * Frontend constructor.

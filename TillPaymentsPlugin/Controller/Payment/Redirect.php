@@ -18,7 +18,7 @@ class Redirect extends Action implements CsrfAwareActionInterface
     /**
      * @var Session
      */
-    private Session $checkoutSession;
+    private $checkoutSession;
 
     /**
      * Redirect constructor.

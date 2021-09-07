@@ -13,7 +13,7 @@ final class ConfigProvider implements ConfigProviderInterface
     /**
      * @var Data
      */
-    private Data $helper;
+    private $helper;
 
     /**
      * ConfigProvider constructor.

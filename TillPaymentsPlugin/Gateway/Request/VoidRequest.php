@@ -15,7 +15,7 @@ class VoidRequest implements BuilderInterface
     /**
      * @var ConfigInterface
      */
-    private ConfigInterface $config;
+    private $config;
 
     /**
      * @param ConfigInterface $config

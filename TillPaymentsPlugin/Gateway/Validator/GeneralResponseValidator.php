@@ -13,7 +13,7 @@ class GeneralResponseValidator extends AbstractValidator
     /**
      * @var Logger
      */
-    private Logger $logger;
+    private $logger;
 
     /**
      * GeneralResponseValidator constructor.

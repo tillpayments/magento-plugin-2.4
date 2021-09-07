@@ -34,12 +34,12 @@ class VaultDetailsHandler implements HandlerInterface
     /**
      * @var PaymentTokenFactoryInterface
      */
-    protected PaymentTokenFactoryInterface $paymentTokenFactory;
+    protected $paymentTokenFactory;
 
     /**
      * @var OrderPaymentExtensionInterfaceFactory
      */
-    protected OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory;
+    protected $paymentExtensionFactory;
 
     /**
      * @var Json
@@ -49,12 +49,12 @@ class VaultDetailsHandler implements HandlerInterface
     /**
      * @var LoggerInterface
      */
-    protected LoggerInterface $logger;
+    protected $logger;
 
     /**
      * @var Data
      */
-    protected Data $helper;
+    protected $helper;
 
     /**
      * VaultDetailsHandler constructor.

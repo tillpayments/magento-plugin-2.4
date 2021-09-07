@@ -56,7 +56,7 @@ class AddressDataBuilder implements BuilderInterface
     /**
      * @var Data
      */
-    protected Data $_helper;
+    protected $_helper;
 
     /**
      * Constructor

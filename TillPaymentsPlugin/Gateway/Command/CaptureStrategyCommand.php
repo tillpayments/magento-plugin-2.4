@@ -23,22 +23,22 @@ class CaptureStrategyCommand implements CommandInterface
     /**
      * @var CommandPoolInterface
      */
-    private CommandPoolInterface $commandPool;
+    private $commandPool;
 
     /**
      * @var TransactionRepositoryInterface
      */
-    private TransactionRepositoryInterface $transactionRepository;
+    private $transactionRepository;
 
     /**
      * @var FilterBuilder
      */
-    private FilterBuilder $filterBuilder;
+    private $filterBuilder;
 
     /**
      * @var SearchCriteriaBuilder
      */
-    private SearchCriteriaBuilder $searchCriteriaBuilder;
+    private $searchCriteriaBuilder;
 
     /**
      * CaptureStrategyCommand constructor.

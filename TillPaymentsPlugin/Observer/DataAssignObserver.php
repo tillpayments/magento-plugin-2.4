@@ -14,14 +14,14 @@ class DataAssignObserver extends AbstractDataAssignObserver
     /**
      * @var array
      */
-    protected array $additionalInformationList = [
+    protected $additionalInformationList = [
         self::TRANSACTION_TOKEN,
     ];
 
     /**
      * @var LoggerInterface
      */
-    protected LoggerInterface $logger;
+    protected $logger;
 
     /**
      * DataAssignObserver constructor.

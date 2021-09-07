@@ -14,12 +14,12 @@ class TransactionCapture implements ClientInterface
     /**
      * @var Logger
      */
-    private Logger $logger;
+    private $logger;
 
     /**
      * @var Service
      */
-    private Service $service;
+    private $service;
 
     /**
      * TransactionCapture constructor.

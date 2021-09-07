@@ -13,12 +13,12 @@ class TransactionAuthorization implements ClientInterface
     /**
      * @var Logger
      */
-    private Logger $logger;
+    private $logger;
 
     /**
      * @var Service
      */
-    private Service $service;
+    private $service;
 
     /**
      * TransactionAuthorization constructor.

@@ -15,17 +15,17 @@ class TokenUiComponentProvider implements TokenUiComponentProviderInterface
     /**
      * @var TokenUiComponentInterfaceFactory
      */
-    private TokenUiComponentInterfaceFactory $componentFactory;
+    private $componentFactory;
 
     /**
      * @var UrlInterface
      */
-    private UrlInterface $urlBuilder;
+    private $urlBuilder;
 
     /**
      * @var LoggerInterface
      */
-    private LoggerInterface $logger;
+    private $logger;
 
     /**
      * @param TokenUiComponentInterfaceFactory $componentFactory

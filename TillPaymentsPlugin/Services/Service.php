@@ -41,22 +41,22 @@ class Service
     /**
      * @var LoggerInterface
      */
-    protected LoggerInterface $_logger;
+    protected $_logger;
 
     /**
      * @var ResponseFactory
      */
-    private ResponseFactory $responseFactory;
+    private $responseFactory;
 
     /**
      * @var ClientFactory
      */
-    private ClientFactory $clientFactory;
+    private $clientFactory;
 
     /**
      * @var Data
      */
-    private Data $helper;
+    private $helper;
 
     /**
      * Service constructor.

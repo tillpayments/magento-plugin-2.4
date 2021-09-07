@@ -15,7 +15,7 @@ class CardDetailsHandler implements HandlerInterface
     /**
      * @var Data
      */
-    protected Data $helper;
+    protected $helper;
 
     /**
      * CardDetailsHandler constructor.

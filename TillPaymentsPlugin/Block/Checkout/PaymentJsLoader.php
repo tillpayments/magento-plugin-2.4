@@ -11,7 +11,7 @@ class PaymentJsLoader extends Template
     /**
      * @var Data
      */
-    private Data $helper;
+    private $helper;
 
     /**
      * Constructor
