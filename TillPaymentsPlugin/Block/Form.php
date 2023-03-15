@@ -16,12 +16,12 @@ class Form extends Cc
     /**
      * @var GatewayConfig
      */
-    protected GatewayConfig $gatewayConfig;
+    protected $gatewayConfig;
 
     /**
      * @var Helper
      */
-    private Helper $paymentDataHelper;
+    private $paymentDataHelper;
 
     /**
      * Form constructor.

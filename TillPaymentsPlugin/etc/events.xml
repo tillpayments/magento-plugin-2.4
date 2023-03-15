@@ -3,4 +3,7 @@
     <event name="payment_method_assign_data">
         <observer name="tillpayments_payment_gateway_data_assign" instance="TillPayments\TillPaymentsPlugin\Observer\DataAssignObserver" />
     </event>
+    <event name="sales_order_save_after">
+        <observer name="tillpayments_payment_order_save_after" instance="TillPayments\TillPaymentsPlugin\Observer\SendCancelEmail" />
+    </event>
 </config>

@@ -50,22 +50,22 @@ class Callback extends Action implements CsrfAwareActionInterface
     /**
      * @var Data
      */
-    private Data $helper;
+    private $helper;
 
     /**
      * @var OrderManagementInterface
      */
-    private OrderManagementInterface $orderManagement;
+    private $orderManagement;
 
     /**
      * @var OrderCommentSender
      */
-    private OrderCommentSender $orderCommentSender;
+    private $orderCommentSender;
 
     /**
      * @var LoggerInterface
      */
-    private LoggerInterface $logger;
+    private $logger;
 
     /**
      * Callback constructor.
@@ -90,7 +90,7 @@ class Callback extends Action implements CsrfAwareActionInterface
         OrderManagementInterface $orderManagement,
         LoggerInterface $logger,
         Data $helper,
-        OrderCommentSender $orderCommentSender
+	OrderCommentSender $orderCommentSender
     ) {
         parent::__construct($context);
         $this->objectManager = $objectManager;
@@ -101,7 +101,7 @@ class Callback extends Action implements CsrfAwareActionInterface
         $this->_json = $json;
         $this->logger = $logger;
         $this->orderManagement = $orderManagement;
-        $this->orderCommentSender = $orderCommentSender;
+	$this->orderCommentSender = $orderCommentSender;
     }
 
     public function execute()
@@ -115,38 +115,38 @@ class Callback extends Action implements CsrfAwareActionInterface
         $calculatedResponseXSignature = $this->helper->getResponseXSignature($request);
         $this->logger->debug('Calculated X-Signature log start');
         $this->logger->debug($calculatedResponseXSignature);
-        $this->logger->debug('Calculated X-Signature log end');
+	$this->logger->debug('Calculated X-Signature log end');
 
-        $jsonData = $request->getContent();
+	$jsonData = $request->getContent();
         $data = $this->_json->unserialize($jsonData);
         $order = $this->_initOrder($data['merchantTransactionId']);
-        $response = [];
+	$response = [];
 
-        if ($calculatedResponseXSignature != $reponseXSignature) {
+	if ($calculatedResponseXSignature != $reponseXSignature) {		
             if ($order) {
                 $order->addStatusHistoryComment('Order not updating due to signature mismatch');
                 $orderResource = $this->_objectManager->get($order->getResourceName());
-                $orderResource->save($order);
-            }
+		$orderResource->save($order);
+	    }
             $this->logger->debug('Order not updating due to signature mismatch');
             echo 'Order not updating due to signature mismatch';
-            exit;
+	    exit;
         } else {
             if ($order) {
-                if ($data['result'] == 'OK') {
+		if ($data['result'] == 'OK') {
                     try {
                         $order->getPayment()->accept();
                         $orderResource = $this->_objectManager->get($order->getResourceName());
                         $orderResource->save($order);
                         $response['msg'] = 'OK';
                         $this->logger->debug('Payment accepted');
-                    } catch (Exception $e) {
+		    } catch (Exception $e) {
                         $response['msg'] = $e->getMessage();
                         $this->logger->debug($e->getMessage());
                     }
                 }
 
-                if ($data['result'] == 'ERROR') {
+		if ($data['result'] == 'ERROR') {
                     try {
                         $msg = '';
                         $code = '';
@@ -166,18 +166,18 @@ class Callback extends Action implements CsrfAwareActionInterface
                         $this->orderCommentSender->send($order, true);
                         $response['msg'] = 'OK';
                         $this->logger->debug($code . '::' . $msg);
-                    } catch (Exception $e) {
+		    } catch (Exception $e) {
                         $response['msg'] = $e->getMessage();
                         $this->logger->debug($e->getMessage());
                     }
                 }
-            } else {
+	    } else {
                 $this->logger->debug('no order found');
                 $response['msg'] = 'no order found';
             }
             echo $response['msg'];
-            exit;
-        }
+	    exit;
+	}
     }
 
     protected function _initOrder($incrementId)

@@ -20,16 +20,16 @@ See [Till Payment's Support - Gateway Credentials](https://support.tillpayments.
 
 The following credentials and behaviour are configurable from this menu
 
-* **HTTP API User**: Obtained from the Users section on the web Gateway. This must be an API username, not the web user you logged in with
-* **HTTP API Password**: Password for the API User account 
+* **API Username**: Obtained from the Users section on the web Gateway. This must be an API username, not the web user you logged in with
+* **API Password**: Password for the API User account 
 * **API Key**: Obtained from your Gateway connector
-* **Merchant Secret Key**: The *Shared Secret* obtained from your Gateway connector
+* **Shared Secret**: The *Shared Secret* obtained from your Gateway connector
 * **Sandbox**: Yes to target our sandbox/dev endpoint, No to target our production endpoint
 ---
 * **Enable Card Payments**: Yes to enable the plugin
 * **Title**: Will be displayed to the customer at checkout when presenting payment options
 * **Seamless Integration**: -
-* **Integration Key**: Obtained from your Gateway connector where it is labelled as *Public Integration Key (e.g. for payment.js)*
+* **Public Integration Key**: Obtained from your Gateway connector where it is labelled as *Public Integration Key (e.g. for payment.js)*
 * **Sort Order**: -
 * **Debug**: Print additional information to Magento logs
 * **3D Secure Verification**: 

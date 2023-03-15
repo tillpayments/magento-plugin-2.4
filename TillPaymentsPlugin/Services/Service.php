@@ -39,6 +39,11 @@ class Service
     const API_REFUND_ENDPOINT = '/refund';
 
     /**
+     * API request status endpoint
+     */
+    const API_STATUS_ENDPOINT = '/status';
+
+    /**
      * @var LoggerInterface
      */
     protected $_logger;
@@ -83,7 +88,7 @@ class Service
      */
     public function authorize($body): array
     {
-        $uri = $this->getApiRequestUri() . $this->getApiKey() . static::API_AUTHORIZE_ENDPOINT;
+	$uri = $this->getApiRequestUri() . $this->getApiKey() . static::API_AUTHORIZE_ENDPOINT;
         $header = $this->prepareHeader($body, static::API_AUTHORIZE_ENDPOINT);
         $requestBody = array_merge_recursive($header, ['json' => $body]);
         $response = $this->doRequest(
@@ -122,7 +127,7 @@ class Service
     {
         $additionalHeaderData = $this->helper->getAdditionalHeaderData();
 
-        if ($this->helper->checkSignatureFlag()) {
+        if ($this->helper->checkSignatureFlag() && $transactionType != static::API_STATUS_ENDPOINT) {
             $xSignatureData = $this->helper->getXSignatureData($body, $transactionType);
             return [
                 'http_errors' => false,
@@ -282,6 +287,27 @@ class Service
         $response = $this->doRequest(
             $uri,
             $requestBody
+        );
+
+        $responseBody = (string)$response->getBody()->getContents();
+        $this->_logger->debug(print_r(json_decode($responseBody), true));
+        return (array)json_decode($responseBody);
+    }
+
+    /**
+     * @param $merchantkey
+     * @return array
+     */
+    public function getOrderStatus($merchantkey): array
+    {
+        $uri = $this->getApiRequestUri() . $this->getApiKey() . '/getByMerchantTransactionId/' . $merchantkey;
+        $statusUri = str_replace("transaction", "status", $uri);
+        $header = $this->prepareHeader([], static::API_STATUS_ENDPOINT);
+        //$requestBody = [];
+        $response = $this->doRequest(
+            $statusUri,
+            $header,
+            Request::HTTP_METHOD_GET
         );
 
         $responseBody = (string)$response->getBody()->getContents();

@@ -39,9 +39,11 @@ class GeneralResponseValidator extends AbstractValidator
         $errorMessages = [];
 
         if (isset($response['success']) && empty($response['success'])) {
-            $errorMsg = __('Error with payment method please select different payment method.');
+            //$errorMsg = __('Error with payment method please select different payment method.');
             $errorCodes = $this->getErrorCodes($response);
-            return $this->createResult(false, [__($errorMsg)], $errorCodes);
+            $errorMsg = $errorCodes;
+	    //return $this->createResult(false, [__($errorMsg)], $errorCodes);
+	    return $this->createResult(false, $errorMsg, $errorCodes);
         }
 
         return $this->createResult($isValid, $errorMessages);

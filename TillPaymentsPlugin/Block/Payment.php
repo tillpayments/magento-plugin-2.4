@@ -14,7 +14,7 @@ class Payment extends Template
     /**
      * @var ConfigProvider
      */
-    private ConfigProvider $config;
+    private $config;
 
     /**
      * Constructor
