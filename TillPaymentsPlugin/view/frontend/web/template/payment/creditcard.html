@@ -5,6 +5,8 @@
         <label data-bind="attr: {'for': getCode()}" class="label">
             <span data-bind="text: getTitle()"></span>
         </label>
+        <img data-bind="attr: {src: tillSrcv, height: '', width: '62'}" class="payment-icon"/>
+        <img data-bind="attr: {src: tillSrcm, height: '', width: '60'}" class="payment-icon"/>
     </div>
     <div class="payment-method-content">
         <!-- ko foreach: getRegion('messages') -->

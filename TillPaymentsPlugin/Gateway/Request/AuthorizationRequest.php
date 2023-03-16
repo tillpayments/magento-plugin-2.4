@@ -70,6 +70,11 @@ class AuthorizationRequest implements BuilderInterface
 
         $transactionIndicatorVal = $this->_helper->getTransactionIndicatorVal();
 
+        $key = $this->_helper->getTruncateString(
+                $order->getOrderIncrementId(),
+                self::MERCHANT_TRANSACTION_MAX_LENGTH
+            );
+
         return [
             self::MERCHANT_TRANSACTION_ID => $this->_helper->getTruncateString(
                 $order->getOrderIncrementId(),
@@ -79,7 +84,7 @@ class AuthorizationRequest implements BuilderInterface
             self::CURRENCY => $order->getCurrencyCode(),
             self::SUCCESS_URL => $this->_helper->getSuccessUrl(),
             self::CANCEL_URL => $this->_helper->getCancelUrl(),
-            self::ERROR_URL => $this->_helper->getErrorUrl(),
+            self::ERROR_URL => $this->_helper->getErrorUrl() . '&merchantkey=' . $key,
             self::CALLBACK_URL => $this->_helper->getCallbackUrl(),
             self::TRANSACTION_INDICATOR => $transactionIndicatorVal
         ];

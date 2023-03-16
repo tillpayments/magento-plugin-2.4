@@ -4,6 +4,7 @@ namespace TillPayments\TillPaymentsPlugin\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use TillPayments\TillPaymentsPlugin\Helper\Data;
+use Magento\Framework\View\Asset\Repository;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
@@ -19,9 +20,10 @@ final class ConfigProvider implements ConfigProviderInterface
      * ConfigProvider constructor.
      * @param Data $helper
      */
-    public function __construct(Data $helper)
+    public function __construct(Data $helper,Repository $assetRepository)
     {
         $this->helper = $helper;
+        $this->assetRepository = $assetRepository;
     }
 
     /**
@@ -49,6 +51,8 @@ final class ConfigProvider implements ConfigProviderInterface
                         'integration_key',
                         self::CREDITCARD_CODE
                     ),
+                    'tillSrcv' => $this->assetRepository->getUrlWithParams('TillPayments_TillPaymentsPlugin::images/visa.jpg',[]),
+                    'tillSrcm' => $this->assetRepository->getUrlWithParams('TillPayments_TillPaymentsPlugin::images/msc.png',[]),
                     'vaultEnable' => true,
                     'ccVaultCode' => self::CC_VAULT_CODE
                 ]

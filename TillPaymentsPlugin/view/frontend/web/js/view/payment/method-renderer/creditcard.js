@@ -21,6 +21,9 @@ define(
                 template: 'TillPayments_TillPaymentsPlugin/payment/creditcard',
             },
 
+            tillSrcv: window.checkoutConfig.payment.tillpayments_creditcard.tillSrcv,
+            tillSrcm: window.checkoutConfig.payment.tillpayments_creditcard.tillSrcm,
+
             initialize: function () {
                 this._super();
                 this.vaultEnabler = new VaultEnabler();

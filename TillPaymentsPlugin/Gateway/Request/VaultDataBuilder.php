@@ -16,7 +16,7 @@ class VaultDataBuilder implements BuilderInterface
     /**
      * @var Data
      */
-    protected Data $_helper;
+    protected $_helper;
 
     /**
      * VaultDataBuilder constructor.
