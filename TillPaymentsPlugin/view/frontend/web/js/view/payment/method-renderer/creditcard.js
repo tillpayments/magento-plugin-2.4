@@ -130,20 +130,45 @@ define(
                 return window.checkoutConfig.payment[this.getCode()].ccVaultCode;
             },
 
-            initializeJsIntegration: function () {
-                this.paymentJs = new PaymentJs('1.2');
-                this.paymentJs.init(this.config.integration_key, 'tillpayments_cc_number_' + this.getCode(), 'tillpayments_cc_cvv_' + this.getCode(), function (payment) {
-                    var style = {
-                        'border': '1px solid #c2c2c2',
-                        'outline': 'none',
-                        'padding': '0 9px',
-                        'font-size': '14px',
-                        'width': 'calc(100% - 6px)',
-                        'height': '32px'
-                    };
-                    payment.setNumberStyle(style);
-                    payment.setCvvStyle(style);
-                    //payment.initRiskScript({type: 'kount'});
+            initializeJsIntegration: async function () {
+                const waitForScript = el => {
+                    return new Promise((res, rej) => {
+                        let retryCounter = 0;
+                        
+                        const findScriptElement = el => {
+                            if (document.querySelector(el) !== null) 
+                                res(new PaymentJs('1.2'));
+
+                            else if (retryCounter == 50) 
+                                rej("Payment Js script failed to load"); 
+                            
+                            else {
+                                retryCounter += 1;
+                                setTimeout(() => findScriptElement(el), 200);
+                            }
+                        }
+
+                        findScriptElement(el);
+                    });
+                }
+
+                await waitForScript(`[data-main="payment-js"]`).then(p => {
+                    this.paymentJs = p;
+                    this.paymentJs.init(this.config.integration_key, 'tillpayments_cc_number_' + this.getCode(), 'tillpayments_cc_cvv_' + this.getCode(), function (payment) {
+                        var style = {
+                            'border': '1px solid #c2c2c2',
+                            'outline': 'none',
+                            'padding': '0 9px',
+                            'font-size': '14px',
+                            'width': 'calc(100% - 6px)',
+                            'height': '32px'
+                        };
+                        payment.setNumberStyle(style);
+                        payment.setCvvStyle(style);
+                        //payment.initRiskScript({type: 'kount'});
+                    })}
+                ).catch(e => {
+                    console.log(e);
                 });
             },
         });
