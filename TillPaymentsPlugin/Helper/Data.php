@@ -577,9 +577,17 @@ class Data extends AbstractHelper
      */
     public function getResponseXSignature($request): string
     {
+        $storeBaseUrl = $this->_storeManager->getStore()->getBaseUrl();
+        $slashCount = substr_count($storeBaseUrl, '/');
+        if ($slashCount > 3) {
+            $storeBaseUrlSplit = explode('/', $storeBaseUrl);
+            $storePrefix = '/' . $storeBaseUrlSplit[count($storeBaseUrlSplit)-2] . '/';
+        } else {
+            $storePrefix = '/';
+        }
         $md5ResponseBody = md5($request->getContent());
         $responseDate = $request->getHeader('Date');
-        $responseCallbackUrl = '/' . self::PAYMENT_CALLBACK;
+        $responseCallbackUrl = $storePrefix . self::PAYMENT_CALLBACK;
         $messageBody = $this->getMessageBody($md5ResponseBody, $responseDate, $responseCallbackUrl);
 
         return $this->getSignatureHmacData($messageBody);
