@@ -1,6 +1,17 @@
 # Till Payments Magento Plugin
 
-## Installation 
+## Requirements
+
+Adobe requires users of Magento to utilise specific versions of dependent software.
+Eg PHP 8.1 for Magento 2.4.4
+
+[Magento System Requirements](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/system-requirements.html)
+
+The user of this plugin will need to ensure that their environment is updated accordingly.
+
+Not doing so may cause this plugin not to operate correctly.
+
+## Installation
 
 Clone this repo and copy the `TillPaymentsPlugin/` directory to your Magento path in the following location `magento/app/code/TillPayments/`
 
@@ -20,26 +31,28 @@ See [Till Payment's Support - Gateway Credentials](https://support.tillpayments.
 
 The following credentials and behaviour are configurable from this menu
 
-* **API Username**: Obtained from the Users section on the web Gateway. This must be an API username, not the web user you logged in with
-* **API Password**: Password for the API User account 
-* **API Key**: Obtained from your Gateway connector
-* **Shared Secret**: The *Shared Secret* obtained from your Gateway connector
-* **Sandbox**: Yes to target our sandbox/dev endpoint, No to target our production endpoint
+- **API Username**: Obtained from the Users section on the web Gateway. This must be an API username, not the web user you logged in with
+- **API Password**: Password for the API User account
+- **API Key**: Obtained from your Gateway connector
+- **Shared Secret**: The _Shared Secret_ obtained from your Gateway connector
+- **Sandbox**: Yes to target our sandbox/dev endpoint, No to target our production endpoint
+
 ---
-* **Enable Card Payments**: Yes to enable the plugin
-* **Title**: Will be displayed to the customer at checkout when presenting payment options
-* **Seamless Integration**: -
-* **Public Integration Key**: Obtained from your Gateway connector where it is labelled as *Public Integration Key (e.g. for payment.js)*
-* **Sort Order**: -
-* **Debug**: Print additional information to Magento logs
-* **3D Secure Verification**: 
-    * **OFF** - 3D-Secure Verification is turned off. Verification can still be enabled by certain risk parameters if configured on your connector.
-    * **OPTIONAL** - If the payer is enrolled into 3D-Secure program, the verification will be performed. If not, the transaction will still be processed.
-    * **MANDATORY** - If 3D-Secure verification is not possible (e.g. Payer not enrolled, Server not reachable), the transaction will be declined.
-* **Payment Action**: Indicates which [transaction type](#transaction-types) will be used for the order.
-    * **Authorize** - Initiates the Preauthorize > Capture | Void flow, where the merchant must manually initiate a Capture to complete the payment
-    * **Debit** - Typical payment flow where the customer will charged as soon as the order is completed
-* **Enable Signature**: This is necessary for Magento to validate the signature of our Gateway postback so that the order status can be updated according to the payment success or failure. This should be left on.
+
+- **Enable Card Payments**: Yes to enable the plugin
+- **Title**: Will be displayed to the customer at checkout when presenting payment options
+- **Seamless Integration**: -
+- **Public Integration Key**: Obtained from your Gateway connector where it is labelled as _Public Integration Key (e.g. for payment.js)_
+- **Sort Order**: -
+- **Debug**: Print additional information to Magento logs
+- **3D Secure Verification**:
+  - **OFF** - 3D-Secure Verification is turned off. Verification can still be enabled by certain risk parameters if configured on your connector.
+  - **OPTIONAL** - If the payer is enrolled into 3D-Secure program, the verification will be performed. If not, the transaction will still be processed.
+  - **MANDATORY** - If 3D-Secure verification is not possible (e.g. Payer not enrolled, Server not reachable), the transaction will be declined.
+- **Payment Action**: Indicates which [transaction type](#transaction-types) will be used for the order.
+  - **Authorize** - Initiates the Preauthorize > Capture | Void flow, where the merchant must manually initiate a Capture to complete the payment
+  - **Debit** - Typical payment flow where the customer will charged as soon as the order is completed
+- **Enable Signature**: This is necessary for Magento to validate the signature of our Gateway postback so that the order status can be updated according to the payment success or failure. This should be left on.
 
 ![](static/pluginconfig.png)
 
@@ -47,17 +60,17 @@ The following credentials and behaviour are configurable from this menu
 
 Magento can call the following subset of our Gateway's known [transaction types](https://gateway.tillpayments.com/documentation/gateway#transaction-types).
 
-* **Debit:** a "normal" payment. Debits the end customer with the given amount.
-* **Preauthorize:** Reserves the payment amount on the customer's payment instrument.
-* **Capture:** Completes a payment which was previously authorized with the Preauthorize method.
-* **Void:** Cancels a previously performed Preauthorize
-* **Refund:** Reverses a payment which was previously performed with Debit or Capture
+- **Debit:** a "normal" payment. Debits the end customer with the given amount.
+- **Preauthorize:** Reserves the payment amount on the customer's payment instrument.
+- **Capture:** Completes a payment which was previously authorized with the Preauthorize method.
+- **Void:** Cancels a previously performed Preauthorize
+- **Refund:** Reverses a payment which was previously performed with Debit or Capture
 
 ## Known Issues
 
 ### Payment input fields no loading
 
-Ensure you have entered the correct **Integration Key** and are targeting the correct environment via the **Sandbox** toggle. 
+Ensure you have entered the correct **Integration Key** and are targeting the correct environment via the **Sandbox** toggle.
 
 In rare cases another third party plugin can conflict with our own and introduce undesirable behaviour. Preventing the payment inputs from loading is just one example. This is usually the case when another plugin is raising exceptions and can often be diagnosed by inspecting the server logs as well as checking the browser's console for errors while the payment page is loading.
 

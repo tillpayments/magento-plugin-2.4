@@ -511,7 +511,7 @@ class Data extends AbstractHelper
     {
         $time = time();
         $check = $time + date("Z", $time);
-        return strftime("%a, %d %b %Y %H:%M:%S GMT", $check);
+        return date("%a, %d %b %Y %H:%M:%S GMT", $check);
     }
 
     /**
@@ -577,9 +577,17 @@ class Data extends AbstractHelper
      */
     public function getResponseXSignature($request): string
     {
+        $storeBaseUrl = $this->_storeManager->getStore()->getBaseUrl();
+        $slashCount = substr_count($storeBaseUrl, '/');
+        if ($slashCount > 3) {
+            $storeBaseUrlSplit = explode('/', $storeBaseUrl);
+            $storePrefix = '/' . $storeBaseUrlSplit[count($storeBaseUrlSplit)-2] . '/';
+        } else {
+            $storePrefix = '/';
+        }
         $md5ResponseBody = md5($request->getContent());
         $responseDate = $request->getHeader('Date');
-        $responseCallbackUrl = '/' . self::PAYMENT_CALLBACK;
+        $responseCallbackUrl = $storePrefix . self::PAYMENT_CALLBACK;
         $messageBody = $this->getMessageBody($md5ResponseBody, $responseDate, $responseCallbackUrl);
 
         return $this->getSignatureHmacData($messageBody);
