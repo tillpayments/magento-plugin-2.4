@@ -511,7 +511,7 @@ class Data extends AbstractHelper
     {
         $time = time();
         $check = $time + date("Z", $time);
-        return strftime("%a, %d %b %Y %H:%M:%S GMT", $check);
+        return date("%a, %d %b %Y %H:%M:%S GMT", $check);
     }
 
     /**
