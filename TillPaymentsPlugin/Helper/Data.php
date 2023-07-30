@@ -578,12 +578,22 @@ class Data extends AbstractHelper
     public function getResponseXSignature($request): string
     {
         $storeBaseUrl = $this->_storeManager->getStore()->getBaseUrl();
-        $slashCount = substr_count($storeBaseUrl, '/');
-        if ($slashCount > 3) {
-            $storeBaseUrlSplit = explode('/', $storeBaseUrl);
-            $storePrefix = '/' . $storeBaseUrlSplit[count($storeBaseUrlSplit)-2] . '/';
+
+        // extract '/wa/online-shop' from https://www.foo.com.au/wa/online-shop returned by getBaseUrl()
+        $matches = [];
+        $result = preg_match('/\b\/.+$/', $storeBaseUrl, $matches);
+        
+        if ($result > 0) {
+            if (substr($matches[0], -1) == "/") {
+                // if $storeBaseUrl ends with / then return the path as is
+                $storePrefix = $matches[0];
+            } else {
+                // else add a / to the end
+                $storePrefix = $matches[0] . "/";
+            }
         } else {
-            $storePrefix = '/';
+            // if no result for the regex then magento is installed in the default path
+            $storePrefix = "/";
         }
         $md5ResponseBody = md5($request->getContent());
         $responseDate = $request->getHeader('Date');
