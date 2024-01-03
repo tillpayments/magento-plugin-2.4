@@ -129,6 +129,8 @@ class Service
 
         if ($this->helper->checkSignatureFlag() && $transactionType != static::API_STATUS_ENDPOINT) {
             $xSignatureData = $this->helper->getXSignatureData($body, $transactionType);
+            $time = time();
+
             return [
                 'http_errors' => false,
                 'auth' => [
@@ -143,7 +145,7 @@ class Service
                     'X-SDK-Type' => $additionalHeaderData['header_x_sdk_type'],
                     'X-SDK-Version' => $additionalHeaderData['header_x_sdk_version'],
                     'X-Signature' => $xSignatureData['signature_hmac_data'],
-                    'Date' => $xSignatureData['signature_time_stamp']
+                    'Date' => gmdate("D, d M Y H:i:s \U\T\C", $time)
                 ]
             ];
         }
