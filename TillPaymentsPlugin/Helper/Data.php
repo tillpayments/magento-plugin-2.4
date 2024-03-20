@@ -27,6 +27,7 @@ class Data extends AbstractHelper
     const SEAMLESS_INTEGRATION = 'payment/tillpayments_creditcard/seamless';
     const THREED_SECURE_VERIFICATION = 'payment/tillpayments_creditcard/use_3dsecure';
     const ENABLE_SIGNATURE = 'payment/tillpayments_creditcard/signature';
+    const ENABLE_CARDPARTIAL = 'payment/tillpayments_creditcard/cardpartial';
     const CURRENT_TRANSACTION_FLAG_IN_MINUTE = 1;
     const MERCHANT_SECRET_KEY = 'payment/tillpayments_creditcard/shared_secret';
     const MERCHANT_API_KEY = 'payment/tillpayments_creditcard/api_key';
@@ -41,7 +42,7 @@ class Data extends AbstractHelper
     const SIGNATURE_CONTENT_TYPE = 'application/json; charset=utf-8';
     const MODULE_PAYMENT = 'TillPayments_TillPaymentsPlugin';
     const HEADER_X_SOURCE_PLATFORM = 'magento';
-    const HEADER_SDK_TYPE = 'magento_plugin';
+    const HEADER_SDK_TYPE = 'till_magento_plugin';
     const FRONTEND_TRANSACTION_INDICATOR = 'SINGLE';
     const BACKEND_TRANSACTION_INDICATOR = 'MOTO';
     const SANDBOX_URL = 'https://test-gateway.tillpayments.com/api/v3/transaction/';
@@ -230,6 +231,17 @@ class Data extends AbstractHelper
         );
     }
 
+    /**
+     * @return mixed
+     */
+    public function checkCardPartialFlag()
+    {
+        return $this->scopeConfig->getValue(
+            self::ENABLE_CARDPARTIAL,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+    
     /**
      * @return string
      * @throws NoSuchEntityException

@@ -100,6 +100,12 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/tillpayments_creditcard/signature</config_path>
                     </field>
+                    <field id="cardpartial" translate="label" type="select" sortOrder="125" showInDefault="1"
+                           showInWebsite="1" showInStore="0">
+                        <label>Show Card Partial</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/tillpayments_creditcard/cardpartial</config_path>
+                    </field>
                 </group>
                 <group id="tillpayments_cc_vault" translate="label" type="text" sortOrder="50" showInDefault="1"
                        showInWebsite="1"

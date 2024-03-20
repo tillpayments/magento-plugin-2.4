@@ -136,6 +136,12 @@ class Callback extends Action implements CsrfAwareActionInterface
 		if ($data['result'] == 'OK') {
                     try {
                         $order->getPayment()->accept();
+                        if ($this->helper->checkCardPartialFlag()) {
+                            // save the card type and last four digits to order comments
+                            $cardType = isset($data['returnData']['type']) ? strval($data['returnData']['type']) : '';
+                            $lastFour = isset($data['returnData']['lastFourDigits']) ? strval($data['returnData']['lastFourDigits']) : '';
+                            $order->addStatusHistoryComment($lastFour . ' ' . $cardType);
+                        }
                         $orderResource = $this->_objectManager->get($order->getResourceName());
                         $orderResource->save($order);
                         $response['msg'] = 'OK';

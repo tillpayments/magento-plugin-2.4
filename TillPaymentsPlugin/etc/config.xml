@@ -34,6 +34,7 @@
                 <order_status>pending</order_status>
                 <environment>sandbox</environment>
                 <allowspecific>0</allowspecific>
+                <cardpartial>0</cardpartial>
                 <sort_order>1</sort_order>
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <shared_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
